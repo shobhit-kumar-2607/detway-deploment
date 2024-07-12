@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="description" content="" />
+<meta name="author" content="" />
+<title>Suspension Acknowledgment</title>
+<!-- Load Favicon-->
+<link href="assets/img/favicon.ico" rel="shortcut icon"
+	type="image/x-icon" />
+<!-- Load Material Icons from Google Fonts-->
+<link
+	href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
+	rel="stylesheet" />
+<!-- Load Simple DataTables Stylesheet-->
+<link
+	href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css"
+	rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/litepicker/dist/css/style.css"
+	rel="stylesheet" />
+<!-- Roboto and Roboto Mono fonts from Google Fonts-->
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
+	rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500"
+	rel="stylesheet" />
+<!-- Load main stylesheet-->
+<link href="css/styles.css" rel="stylesheet" />
+<style>
+td {
+	white-space: nowrap;
+}
+
+th {
+	white-space: nowrap;
+}
+
+.popup {
+	display: none;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 400px;
+	height: 260px;
+	background-color: white;
+	padding: 20px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.popup-content {
+	text-align: center;
+}
+
+.close-btn {
+	position: absolute;
+	top: 5px;
+	right: 10px;
+	cursor: pointer;
+}
+
+.popup-tab {
+	display: none;
+}
+
+#overlay {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+}
+
+#loader {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	display: none;
+}
+</style>
+</head>
+<body class="nav-fixed bg-light">
+	<!-- Top app bar navigation menu-->
+	<div th:insert="~{fragments/header.html :: headermenu}"></div>
+	<!-- Layout wrapper-->
+	<div id="layoutDrawer">
+		<!-- Layout navigation-->
+		<div th:insert="~{fragments/leftMenu.html :: leftmenu}"></div>
+		<!-- Layout content-->
+
+		<div id="layoutDrawer_content">
+			<!-- Main page content-->
+			<!-- Page header-->
+			<header class="bg-dark">
+				<div class="container-xl px-5">
+					<h1 class="text-white py-3 mb-0 display-6">
+						<span>Suspension Acknowledgment</span>
+					</h1>
+				</div>
+			</header>
+			<div class="container-xl p-5">
+				<div class="card card-raised">
+					<div class="card-body text-center p-5">
+						<div id="overlay"></div>
+						<form role="form" action="#"
+							th:action="@{suspension-acknowledgment.html}"
+							th:object="${filterForm}" method="post"
+							onsubmit="return commonValidate();">
+							<div class="row">
+								<div class="col-sm-5">
+									<div class="mb-3">
+										<label class="form-label" for="msisdn">MSISDN </label> <input
+											class="form-control" id="msisdns" type="text"
+											th:field="*{msisdn}" /> <label id="lblmsisdn"
+											style="color: red; visibility: hidden;"> <span
+											id="msisdntext"></span></label>
+									</div>
+								</div>
+								<div class="col-sm-5">
+									<div class="mb-3">
+										<label class="form-label" for="referenceId">Reference
+											Id </label> <input class="form-control" id="referenceId" type="text"
+											th:field="*{requestId}" /> <label id="lbreferenceId"
+											style="color: red; visibility: hidden;"> <span
+											id="referenceIdtext"></span></label>
+									</div>
+								</div>
+								<div class="col-sm-2">
+									<div class="mb-3">
+										<br />
+										<button class="btn btn-danger" name="Submit" value="Submit"
+											type="Submit" th:text="Submit" id="btnSubmit">Submit</button>
+									</div>
+								</div>
+							</div>
+						</form>
+						<hr />
+						<table id="datatablesSimple" class="table"
+							style="overflow-y: scroll; display: block;">
+							<thead>
+								<tr>
+									<td><input type="checkbox" id="selectAllCheckbox"></td>
+									<th>Sr.No</th>
+									<th>Reference Id</th>
+									<th>AccountID</th>
+									<th>Msisdn</th>
+									<th>Bill Date</th>
+									<th>Due Date</th>
+									<th>Amount</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="item, stats : ${listofitem}">
+									<td><input type="checkbox" class="rowCheckbox"
+										th:data-request-id="${item.transactionId}"></td>
+									<td th:text="${stats.count}">1</td>
+									<td th:text="${item.transactionId}"></td>
+									<td th:text="${item.acc_no}"></td>
+									<td th:text="${item.msisdn}"></td>
+									<td th:text="${item.bill_date}"></td>
+									<td th:text="${item.due_date}"></td>
+									<td th:text="${item.amount}"></td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="row">
+							<div class="col-sm-4">
+								<div class="mb-3" style="padding: 15px;">
+									<button class="portApprovalTask btn btn-danger">Submit</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="popup" class="popup" style="display: none;">
+						<div class="popup-content">
+							<span class="close-btn">&times;</span>
+							<div class="row">
+								<div class="col-sm-12">
+									<label class="form-label" for="selectReason"
+										style="float: left;">Reason</label> <select
+										class="form-select" id="selectReason"
+										aria-label="Default select example">
+										<option selected>Select reason</option>
+										<option th:each="item : ${listofreason}" th:value="${item.id}"
+											th:text="${item.description}"></option>
+									</select>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-3">
+									<div class="mb-3">
+										<br />
+										<button class="btn btn-danger" id="sendButton">Submit</button>
+									</div>
+								</div>
+								<div class="col-sm-3">
+									<div class="mb-3">
+										<br /> <a class="btn btn-danger"
+											href="suspension-acknowledgment.html">Close</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Footer-->
+			<div th:insert="~{fragments/footer.html :: footer}"></div>
+			<div id="loader" style="display: none;">
+				<!-- Spinner -->
+				<div class="spinner-border text-primary" role="status">
+					<span class="visually-hidden">Loading...</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Load Bootstrap JS bundle-->
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+		crossorigin="anonymous"></script>
+	<script src="js/scripts.js"></script>
+	<script src="js/jquery/jquery.min.js"></script>
+	<script
+		src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
+	<script src="js/localization/localization.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/litepicker/dist/js/main.nocss.js"
+		crossorigin="anonymous"></script>
+	<script th:src="@{js/litepicker.js}"></script>
+	<script src="js/portme/suspension.js"></script>
+	<script type="text/javascript">
+		$(document).on("click", ".portApprovalTask", function() {
+		  document.getElementById('overlay').style.display = 'block';
+		  document.getElementById('popup').style.display = 'block';
+		});
+
+		function closePopup() {
+		  document.getElementById('overlay').style.display = 'none';
+		  document.getElementById('popup').style.display = 'none';
+		};
+
+		// Event listener for radio buttons
+		document.querySelectorAll('input[type="radio"][name="popupType"]').forEach(radioButton => {
+		  radioButton.addEventListener('change', function() {
+		    const popup1Content = document.getElementById('popup1Content');
+		    const popup2Content = document.getElementById('popup2Content');
+
+		    if (this.id === 'acceptService') {
+		      popup1Content.style.display = 'block';
+		      popup2Content.style.display = 'none';
+		      document.getElementById('actionTaken').value="Accept";
+		    } else if (this.id === 'rejectService') {
+		      popup1Content.style.display = 'none';
+		      popup2Content.style.display = 'block';
+		      document.getElementById('actionTaken').value="Reject";
+		    }
+		  });
+		});
+	</script>
+	<script>
+	const checkedIds = new Set();
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+        const rowCheckboxes = document.querySelectorAll('.rowCheckbox');
+        
+
+        // Function to update the checked IDs
+        function updateCheckedIds() {
+            checkedIds.clear();
+            rowCheckboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    checkedIds.add(checkbox.getAttribute('data-request-id'));
+                }
+            });
+            console.log(Array.from(checkedIds));  // For debugging purposes
+        }
+
+        // Event listener for the "Select All" checkbox
+        selectAllCheckbox.addEventListener('change', function() {
+            rowCheckboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+            updateCheckedIds();
+        });
+
+        // Event listeners for each row checkbox
+        rowCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (!this.checked) {
+                    selectAllCheckbox.checked = false;
+                } else if (Array.from(rowCheckboxes).every(checkbox => checkbox.checked)) {
+                    selectAllCheckbox.checked = true;
+                }
+                updateCheckedIds();
+            });
+        });
+
+        // Function to send checked IDs to the server
+function sendCheckedIds() {
+    var selectReason = document.getElementById('selectReason').value;
+    const checkedIdsArray = Array.from(checkedIds);
+    $('#loader').show();
+    if (checkedIdsArray.length === 0) {
+        alert("Please select at least one record");
+    } else {
+        fetch('api/suspension-dno-ack', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                checkedIds: checkedIdsArray,
+                selectReason: selectReason
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.responseCode == 200) {
+                alert("Successfully Submitted");
+                $('#loader').show();
+            } else {
+                alert("Submission Failed: " + data.message); 
+                $('#loader').show();
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert("An error occurred while submitting");
+            $('#loader').show();
+        });
+    }
+}
+        // Example button to trigger the send function
+        document.getElementById('sendButton').addEventListener('click', sendCheckedIds);
+    });
+</script>
+
+</body>
+</html>
